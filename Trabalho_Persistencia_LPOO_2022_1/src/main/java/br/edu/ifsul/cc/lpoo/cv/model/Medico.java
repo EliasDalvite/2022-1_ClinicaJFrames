@@ -1,14 +1,17 @@
 
 package br.edu.ifsul.cc.lpoo.cv.model;
 
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
 @Entity
 @Table(name="tb_medico")
 @DiscriminatorValue("M")
+@NamedQueries({
+        @NamedQuery(name="Medico.login",
+                query="SELECT p from Pessoa p where p.nome = :paramN and p.senha = :paramS")
+})
 public class Medico extends Pessoa{
     
     @Column(nullable = false)

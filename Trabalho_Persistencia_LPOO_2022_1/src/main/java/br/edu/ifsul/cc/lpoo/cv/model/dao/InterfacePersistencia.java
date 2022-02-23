@@ -1,6 +1,7 @@
 
 package br.edu.ifsul.cc.lpoo.cv.model.dao;
 
+import br.edu.ifsul.cc.lpoo.cv.model.Pessoa;
 import br.edu.ifsul.cc.lpoo.cv.model.Agenda;
 import br.edu.ifsul.cc.lpoo.cv.model.Medico;
 import java.util.List;
@@ -21,4 +22,6 @@ public interface InterfacePersistencia {
     public List<Agenda> listAgendas() throws Exception;
     
     public List<Medico> listMedicos() throws Exception;
+
+    public Medico doLogin(String nome, String senha) throws Exception;
 }

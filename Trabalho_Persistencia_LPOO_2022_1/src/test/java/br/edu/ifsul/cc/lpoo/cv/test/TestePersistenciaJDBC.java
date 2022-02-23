@@ -15,8 +15,11 @@ import org.junit.Test;
 
 
 public class TestePersistenciaJDBC {
-        
-    @Test
+
+
+
+
+    //@Test
     public void testConexao() throws Exception {
         
         PersistenciaJDBC persistencia = new PersistenciaJDBC();

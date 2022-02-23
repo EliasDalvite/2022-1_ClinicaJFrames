@@ -3,6 +3,7 @@ package br.edu.ifsul.cc.lpoo.cv.model.dao;
 
 import br.edu.ifsul.cc.lpoo.cv.model.Agenda;
 import br.edu.ifsul.cc.lpoo.cv.model.Medico;
+import br.edu.ifsul.cc.lpoo.cv.model.Pessoa;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -318,6 +319,30 @@ public class PersistenciaJDBC implements InterfacePersistencia{
         }
         return lista;
         
+    }
+
+    @Override
+    public Medico doLogin(String nome, String senha) throws Exception {
+
+
+        Medico medico = null;
+
+        PreparedStatement ps = this.con.prepareStatement("select p.nome, p.senha from tb_pessoa p where p.nome= ? and p.senha = ? ");
+
+        ps.setString(1, nome);
+        ps.setString(2, senha);
+
+        ResultSet rs = ps.executeQuery();//o ponteiro do REsultSet inicialmente está na linha -1
+
+        if(rs.next()){//se a matriz (ResultSet) tem uma linha
+
+            medico = new Medico();
+            medico.setNome(rs.getString("nome"));
+        }
+
+        ps.close();
+        return medico;
+
     }
     
 }

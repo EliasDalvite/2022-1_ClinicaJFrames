@@ -3,6 +3,7 @@ package br.edu.ifsul.cc.lpoo.cv.model.dao;
 
 import br.edu.ifsul.cc.lpoo.cv.model.Agenda;
 import br.edu.ifsul.cc.lpoo.cv.model.Medico;
+
 import java.util.List;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityManager;
@@ -16,7 +17,7 @@ public class PersistenciaJPA implements InterfacePersistencia{
     public PersistenciaJPA(){
         
         //parametro: é o nome da unidade de persistencia (Persistence Unit)
-        factory = Persistence.createEntityManagerFactory("pu_clinica_lpoo_2021_2");
+        factory = Persistence.createEntityManagerFactory("clinica_lpoo_2021_2");
         entity = factory.createEntityManager();
     }
 
@@ -40,7 +41,7 @@ public class PersistenciaJPA implements InterfacePersistencia{
 
     @Override
     public void persist(Object o) throws Exception {
-        
+
         entity.getTransaction().begin();// abrir a transacao.
         entity.persist(o); //realiza o insert ou update.
         entity.getTransaction().commit(); //comita a transacao (comando sql)
@@ -49,24 +50,36 @@ public class PersistenciaJPA implements InterfacePersistencia{
 
     @Override
     public void remover(Object o) throws Exception {
-        
+
         entity.getTransaction().begin();// abrir a transacao.
         entity.remove(o); //realiza o delete
         entity.getTransaction().commit(); //comita a transacao (comando sql)
-        
+
     }
     
     @Override
     public List<Agenda> listAgendas() {
-        
-        return entity.createNamedQuery("Agenda.list_order_by_id_asc").getResultList();
+
+        throw new UnsupportedOperationException("Não disponivel");
         
     }
     
     @Override
     public List<Medico> listMedicos() {
+
+        throw new UnsupportedOperationException("Não disponivel");
         
-        return entity.createNamedQuery("Medico.list_order_by_id_asc").getResultList();
-        
+    }
+
+    @Override
+    public Medico doLogin(String nome, String senha) throws Exception {
+
+        List<Medico> list = entity.createNamedQuery("Medico.logib").setParameter("ParamN", nome).setParameter("ParamS", senha).getResultList();
+        if(list.isEmpty()){
+            return null;
+        }else{
+            return list.get(0);
+        }
+
     }
 }

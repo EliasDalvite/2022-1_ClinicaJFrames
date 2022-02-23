@@ -13,6 +13,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+
 @Entity
 @Table(name="tb_pessoa")
 @Inheritance(strategy = InheritanceType.JOINED)
