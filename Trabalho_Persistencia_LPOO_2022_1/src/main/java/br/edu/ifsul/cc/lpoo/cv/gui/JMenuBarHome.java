@@ -13,10 +13,12 @@ import javax.swing.JOptionPane;
 public class JMenuBarHome extends JMenuBar implements ActionListener {
 
     private JMenu menuArquivo;
+    private JMenuItem menuItemLogout;
     private JMenuItem menuItemSair;
 
     private JMenu menuCadastro;
-    private JMenuItem menuItemJogador;
+    private JMenuItem menuItemMedico;
+    private JMenuItem menuItemFuncionario;
 
     private Controle controle;
 
@@ -34,6 +36,13 @@ public class JMenuBarHome extends JMenuBar implements ActionListener {
         menuArquivo.setToolTipText("Arquivo"); //acessibilidade
         menuArquivo.setFocusable(true); //acessibilidade
 
+        menuItemLogout = new JMenuItem("Logout");
+        menuItemLogout.setToolTipText("Logout"); //acessibilidade
+        menuItemLogout.setFocusable(true);     //acessibilidade
+
+        menuItemLogout.addActionListener(this);
+        menuItemLogout.setActionCommand("menu_logout");
+        menuArquivo.add(menuItemLogout);
 
         menuItemSair = new JMenuItem("Sair");
         menuItemSair.setToolTipText("Sair"); //acessibilidade
@@ -48,13 +57,22 @@ public class JMenuBarHome extends JMenuBar implements ActionListener {
         menuCadastro.setToolTipText("Cadastro"); //acessibilidade
         menuCadastro.setFocusable(true); //acessibilidade
 
-        menuItemJogador = new JMenuItem("Pessoa");
-        menuItemJogador.setToolTipText("Pessoa"); //acessibilidade
-        menuItemJogador.setFocusable(true); //acessibilidade
+        menuItemMedico = new JMenuItem("Medico");
+        menuItemMedico.setToolTipText("Medico"); //acessibilidade
+        menuItemMedico.setFocusable(true); //acessibilidade
 
-        menuItemJogador.addActionListener(this);
-        menuItemJogador.setActionCommand("menu_pessoa");
-        menuCadastro.add(menuItemJogador);
+        menuItemMedico.addActionListener(this);
+        menuItemMedico.setActionCommand("menu_medico");
+        menuCadastro.add(menuItemMedico);
+
+        menuItemFuncionario = new JMenuItem("Funcionario");
+        menuItemFuncionario.setToolTipText("Funcionario"); //acessibilidade
+        menuItemFuncionario.setFocusable(true); //acessibilidade
+
+        menuItemFuncionario.addActionListener(this);
+        menuItemFuncionario.setActionCommand("menu_funcionario");
+        menuCadastro.add(menuItemFuncionario);
+
 
         this.add(menuArquivo);
         this.add(menuCadastro);
@@ -74,12 +92,20 @@ public class JMenuBarHome extends JMenuBar implements ActionListener {
             }
 
 
-        }else if(e.getActionCommand().equals(menuItemJogador.getActionCommand())){
+        }else if(e.getActionCommand().equals(menuItemMedico.getActionCommand())){
 
             //se o usuario clicou no menuitem Usuario
-            controle.showTela("tela_pessoa");
-        }
+            controle.showTela("tela_medico");
 
+        }else if(e.getActionCommand().equals(menuItemFuncionario.getActionCommand())){
+
+            //se o usuario clicou no menuitem Usuario
+            controle.showTela("tela_funcionario");
+
+        }else if(e.getActionCommand().equals(menuItemLogout.getActionCommand())){
+
+        controle.showTela("tela_autenticacao");
+        }
     }
 
 

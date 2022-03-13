@@ -1,15 +1,9 @@
 
 package br.edu.ifsul.cc.lpoo.cv.model.dao;
 
-import br.edu.ifsul.cc.lpoo.cv.model.Agenda;
-import br.edu.ifsul.cc.lpoo.cv.model.Medico;
-import br.edu.ifsul.cc.lpoo.cv.model.Pessoa;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import br.edu.ifsul.cc.lpoo.cv.model.*;
+
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -90,22 +84,78 @@ public class PersistenciaJDBC implements InterfacePersistencia{
                 return a;
             }
 
-        }else if(c == Medico.class){
+        }else if (c == Medico.class) {
 
-            PreparedStatement ps = this.con.prepareStatement("select numero_crmv, cpf from tb_medico where cpf = ?");
+            PreparedStatement ps = this.con.prepareStatement("SELECT p.cpf, p.rg, p.nome, p.senha, p.numero_celular,"
+                    + " p.email, p.data_cadastro, p.data_nascimento, p.cep, p.endereco, p.complemento, m.numero_crmv"
+                    + " FROM tb_pessoa p INNER JOIN tb_medico m ON p.cpf = m.cpf WHERE p.cpf = ?;");
+
             ps.setString(1, id.toString());
 
             ResultSet rs = ps.executeQuery();
 
-            if(rs.next()){
-
+            if (rs.next()) {
                 Medico m = new Medico();
-                m.setNumero_crmv(rs.getString("numero_crmv"));
-                m.setCpf(rs.getString("cpf"));
-                
-                ps.close();
 
+                m.setCpf(rs.getString("cpf"));
+                m.setRg(rs.getString("rg"));
+                m.setNome(rs.getString("nome"));
+                m.setSenha(rs.getString("senha"));
+                m.setNumero_celular(rs.getString("numero_celular"));
+                m.setEmail(rs.getString("email"));
+                m.setEndereco(rs.getString("endereco"));
+                m.setCep(rs.getString("cep"));
+                m.setComplemento(rs.getString("complemento"));
+                m.setNumero_crmv(rs.getString("numero_crmv"));
+
+                Calendar dtNascimento = Calendar.getInstance();
+                dtNascimento.setTimeInMillis(rs.getDate("data_nascimento").getTime());
+                m.setData_nascimento(dtNascimento);
+
+                Calendar dtCadastro = Calendar.getInstance();
+                dtCadastro.setTimeInMillis(rs.getDate("data_cadastro").getTime());
+                m.setData_cadastro(dtCadastro);
+
+                ps.close();
                 return m;
+            }
+
+        }else if (c == Funcionario.class) {
+
+            PreparedStatement ps = this.con.prepareStatement("SELECT p.cpf, p.rg, p.nome, p.senha, p.numero_celular,"
+                    + " p.email, p.data_cadastro, p.data_nascimento, p.cep, p.endereco, p.complemento, f.cargo, f.numero_ctps, f.numero_pis"
+                    + " FROM tb_pessoa p INNER JOIN tb_funcionario f ON p.cpf = f.cpf WHERE p.cpf = ?;");
+
+            ps.setString(1, id.toString());
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                Funcionario f = new Funcionario();
+
+                f.setCpf(rs.getString("cpf"));
+                f.setRg(rs.getString("rg"));
+                f.setNome(rs.getString("nome"));
+                f.setSenha(rs.getString("senha"));
+                f.setNumero_celular(rs.getString("numero_celular"));
+                f.setEmail(rs.getString("email"));
+                f.setEndereco(rs.getString("endereco"));
+                f.setCep(rs.getString("cep"));
+                f.setComplemento(rs.getString("complemento"));
+                f.setCargo(Cargo.valueOf(rs.getString("cargo")));
+                f.setNumero_ctps(rs.getString("numero_ctps"));
+                f.setNumero_pis(rs.getString("numero_pis"));
+
+                Calendar dtNascimento = Calendar.getInstance();
+                dtNascimento.setTimeInMillis(rs.getDate("data_nascimento").getTime());
+                f.setData_nascimento(dtNascimento);
+
+                Calendar dtCadastro = Calendar.getInstance();
+                dtCadastro.setTimeInMillis(rs.getDate("data_cadastro").getTime());
+                f.setData_cadastro(dtCadastro);
+
+                ps.close();
+                return f;
             }
         }
         return null;
@@ -114,17 +164,17 @@ public class PersistenciaJDBC implements InterfacePersistencia{
 
     @Override
     public void persist(Object o) throws Exception {
-        
         //descobrir a instancia do Object o
-        if(o instanceof Agenda){
 
+
+        if(o instanceof Agenda){
             Agenda a = (Agenda) o; //converter o para o e que é do tipo Endereco
-            
+
             //descobrir se é para realiar insert ou update.
             if(a.getId() == null){
                 //insert.                                    
                 PreparedStatement ps = this.con.prepareStatement("insert into tb_agenda (id, data_inicio, data_fim, observacao, tipoproduto, funcionario_cpf, medico_cpf) values (nextval('seq_agenda_id'), ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
-                
+
                 ps.setDate(1, new java.sql.Date(a.getData_inicio().getTimeInMillis()));
                 ps.setDate(2, new java.sql.Date(a.getData_fim().getTimeInMillis()));
                 ps.setString(3, a.getObservacao());
@@ -137,7 +187,7 @@ public class PersistenciaJDBC implements InterfacePersistencia{
             }else{
                 //update.
                 PreparedStatement ps = this.con.prepareStatement("update tb_agenda set data_inicio = ?, data_fim = ?, observacao = ?, tipoproduto = ?, funcionario_cpf = ?, medico_cpf = ? where id = ?");
-                
+
                 ps.setDate(1, new java.sql.Date(a.getData_inicio().getTimeInMillis()));
                 ps.setDate(2, new java.sql.Date(a.getData_fim().getTimeInMillis()));
                 ps.setString(3, a.getObservacao());
@@ -151,62 +201,110 @@ public class PersistenciaJDBC implements InterfacePersistencia{
             }
 
 
-        }else if (o instanceof Medico){
+        }else if (o instanceof Funcionario) {
 
-            Medico med = (Medico) o; //converter o para o e que é do tipo Endereco
-
-            //descobrir se é para realiar insert ou update.
-            if (med.getData_cadastro() == null) {
-                
-                PreparedStatement ps = this.con.prepareStatement("insert into tb_pessoa"
+            Funcionario f = (Funcionario) o;
+            if (f.getData_cadastro() == null) {
+                PreparedStatement ps_pessoa = this.con.prepareStatement("insert into tb_pessoa"
                         + " (cpf, rg, nome, senha, numero_celular, email, cep, endereco, complemento, data_cadastro, data_nascimento, tipo)"
-                        + " values (?, ?, ?, ?, ?, ?, ?, ?, ?, now(), ?, 'M') ");
-                ps.setString(1, med.getCpf());
-                ps.setString(2, med.getRg());
-                ps.setString(3, med.getNome());
-                ps.setString(4, med.getSenha());
-                ps.setString(5, med.getNumero_celular());
-                ps.setString(6, med.getEmail());
-                ps.setString(7, med.getCep());
-                ps.setString(8, med.getEndereco());
-                ps.setString(9, med.getComplemento());
-                ps.setDate(10, new java.sql.Date(med.getData_nascimento().getTimeInMillis()));
+                        + " values (?, ?, ?, ?, ?, ?, ?, ?, ?, now(), ?, 'F')");
+
+                ps_pessoa.setString(1, f.getCpf());
+                ps_pessoa.setString(2, f.getRg());
+                ps_pessoa.setString(3, f.getNome());
+                ps_pessoa.setString(4, f.getSenha());
+                ps_pessoa.setString(5, f.getNumero_celular());
+                ps_pessoa.setString(6, f.getEmail());
+                ps_pessoa.setString(7, f.getCep());
+                ps_pessoa.setString(8, f.getEndereco());
+                ps_pessoa.setString(9, f.getComplemento());
+                ps_pessoa.setTimestamp(10, new Timestamp(f.getData_nascimento().getTimeInMillis()));
+
+                ps_pessoa.execute();
+
+
+                PreparedStatement psf = this.con.prepareStatement("insert into tb_funcionario "
+                        + "(cargo, numero_ctps, numero_pis, cpf) values (?, ?, ?, ?) ");
+                psf.setString(1, f.getCargo().toString());
+                psf.setString(2, f.getNumero_ctps());
+                psf.setString(3, f.getNumero_pis());
+                psf.setString(4, f.getCpf());
+                psf.execute();
+
+
+            } else {
+                PreparedStatement ps = this.con.prepareStatement("update tb_pessoa set rg = ?, nome = ?, senha = ?, numero_celular = ?, "
+                        + "email = ?, cep= ?, endereco = ?, complemento = ?, data_nascimento = ?, tipo = 'F'"
+                        + "where cpf = ?");
+                ps.setString(1, f.getRg());
+                ps.setString(2, f.getNome());
+                ps.setString(3, f.getSenha());
+                ps.setString(4, f.getNumero_celular());
+                ps.setString(5, f.getEmail());
+                ps.setString(6, f.getCep());
+                ps.setString(7, f.getEndereco());
+                ps.setString(8, f.getComplemento());
+                ps.setTimestamp(9, new Timestamp(f.getData_nascimento().getTimeInMillis()));
+                ps.setString(10, f.getCpf());
+
+                PreparedStatement psf = this.con.prepareStatement("update tb_funcionario set cargo = ?, numero_ctps = ?, numero_pis = ? where cpf = ?");
+                psf.setString(1, f.getCargo().toString());
+                psf.setString(2, f.getNumero_ctps());
+                psf.setString(3, f.getNumero_pis());
+                psf.setString(4, f.getCpf());
+
 
                 ps.execute();
-            
-                PreparedStatement ps2 = this.con.prepareStatement("insert into tb_medico (numero_crmv, cpf) values (?, ?);");
-                
-                ps2.setString(1, med.getNumero_crmv());
-                ps2.setString(2, med.getCpf());
-               
-                ps2.execute();
+                psf.execute();
+            }
 
-            }else{
-                //update.
-                
-                PreparedStatement ps = this.con.prepareStatement("update tb_pessoa set"
-                        + " rg = ?, nome = ?, senha = ?, numero_celular = ?, email = ?, cep = ?,"
-                        + " endereco = ?, complemento = ?, now(), data_nascimento = ?, tipo = 'M' where cpf = ?");
-                
-                ps.setString(1, med.getRg());
-                ps.setString(2, med.getNome());
-                ps.setString(3, med.getSenha());
-                ps.setString(4, med.getNumero_celular());
-                ps.setString(5, med.getEmail());
-                ps.setString(6, med.getCep());
-                ps.setString(7, med.getEndereco());
-                ps.setString(8, med.getComplemento());
-                ps.setDate(9, new java.sql.Date(med.getData_nascimento().getTimeInMillis()));
-                ps.setString(10, med.getCpf());
+            }else if (o instanceof Medico) {
+            Medico m = (Medico) o;
+            if (m.getData_cadastro() == null) {
+                PreparedStatement ps_pessoa = this.con.prepareStatement("insert into tb_pessoa"
+                        + " (cpf, rg, nome, senha, numero_celular, email, cep, endereco, complemento, data_cadastro, data_nascimento, tipo)"
+                        + " values (?, ?, ?, ?, ?, ?, ?, ?, ?, now(), ?, 'M')");
+
+                ps_pessoa.setString(1, m.getCpf());
+                ps_pessoa.setString(2, m.getRg());
+                ps_pessoa.setString(3, m.getNome());
+                ps_pessoa.setString(4, m.getSenha());
+                ps_pessoa.setString(5, m.getNumero_celular());
+                ps_pessoa.setString(6, m.getEmail());
+                ps_pessoa.setString(7, m.getCep());
+                ps_pessoa.setString(8, m.getEndereco());
+                ps_pessoa.setString(9, m.getComplemento());
+                ps_pessoa.setTimestamp(10, new Timestamp(m.getData_nascimento().getTimeInMillis()));
+
+                ps_pessoa.execute();
+
+                PreparedStatement psf = this.con.prepareStatement("insert into tb_medico "
+                        + "(numero_crmv, cpf) values (?, ?) ");
+                psf.setString(1, m.getNumero_crmv());
+                psf.setString(2, m.getCpf());
+                psf.execute();
+                //System.out.println("O Funcionario com CPF = " + f.getCpf() + " foi cadastrado com sucesso!\n");
+            } else {
+                PreparedStatement ps = this.con.prepareStatement("update tb_pessoa set rg = ?, nome = ?, senha = ?, numero_celular = ?, "
+                        + "email = ?, cep= ?, endereco = ?, complemento = ?, data_nascimento = ?, tipo = 'M'"
+                        + "where cpf = ?");
+                ps.setString(1, m.getRg());
+                ps.setString(2, m.getNome());
+                ps.setString(3, m.getSenha());
+                ps.setString(4, m.getNumero_celular());
+                ps.setString(5, m.getEmail());
+                ps.setString(6, m.getCep());
+                ps.setString(7, m.getEndereco());
+                ps.setString(8, m.getComplemento());
+                ps.setTimestamp(9, new Timestamp(m.getData_nascimento().getTimeInMillis()));
+                ps.setString(10, m.getCpf());
+
+                PreparedStatement psf = this.con.prepareStatement("update tb_medico set numero_crmv = ? where cpf = ?");
+                psf.setString(1, m.getNumero_crmv());
+                psf.setString(2, m.getCpf());
 
                 ps.execute();
-                
-                PreparedStatement ps2 = this.con.prepareStatement("update tb_medico set numero_crmv = ? where cpf = ?");
-                
-                ps2.setString(1, med.getNumero_crmv());
-                ps2.setString(2, med.getCpf());
-                
-                ps2.execute();//executa o comando.
+                psf.execute();
             }
         }
     }
@@ -222,7 +320,6 @@ public class PersistenciaJDBC implements InterfacePersistencia{
             ps.execute();
 
         }else if(o instanceof Medico){
-            
             Medico med = (Medico) o; //converter o para o e que é do tipo Receita
             
             PreparedStatement ps = this.con.prepareStatement("delete from tb_agenda where medico_cpf = ?");
@@ -235,6 +332,22 @@ public class PersistenciaJDBC implements InterfacePersistencia{
             
             PreparedStatement ps3 = this.con.prepareStatement("delete from tb_pessoa where cpf = ?");// deleta a informação da tabela receita_produto
             ps3.setString(1, med.getCpf());
+            ps3.execute();
+
+        }else if(o instanceof Funcionario){
+
+            Funcionario func = (Funcionario) o; //converter o para o e que é do tipo Receita
+
+            PreparedStatement ps = this.con.prepareStatement("delete from tb_agenda where funcionario_cpf = ?");
+            ps.setString(1, func.getCpf());
+            ps.execute();
+
+            PreparedStatement ps2 = this.con.prepareStatement("delete from tb_funcionario where cpf = ?");// deleta a informação da tabela receita_produto
+            ps2.setString(1, func.getCpf());
+            ps2.execute();
+
+            PreparedStatement ps3 = this.con.prepareStatement("delete from tb_pessoa where cpf = ?");// deleta a informação da tabela receita_produto
+            ps3.setString(1, func.getCpf());
             ps3.execute();
         }
     }
@@ -273,27 +386,23 @@ public class PersistenciaJDBC implements InterfacePersistencia{
         return lista;
         
     }
-    
+
     @Override
     public List<Medico> listMedicos() throws Exception {
-        
+
         List<Medico> lista = null;
 
-        
+
         PreparedStatement ps = this.con.prepareStatement("SELECT p.cpf, p.rg, p.nome, p.senha, p.numero_celular,"
-                                     +  " p.email, p.data_cadastro, p.data_nascimento, p.cep, p.endereco, p.complemento, m.numero_crmv"
-                                     +  " FROM tb_pessoa p INNER JOIN tb_medico m ON p.cpf = m.cpf;");
-        
-        //PreparedStatement ps = this.con.prepareStatement("select cpf, rg, nome, senha, numero_celular, email, data_cadastro,"
-          //      + "data_nascimento, cep, endereco, complemento, numero_crmv from tb_pessoa order by id asc");
+                +  " p.email, p.data_cadastro, p.data_nascimento, p.cep, p.endereco, p.complemento, m.numero_crmv"
+                +  " FROM tb_pessoa p INNER JOIN tb_medico m ON p.cpf = m.cpf;");
 
         ResultSet rs = ps.executeQuery();//executa a query
-       
+
         lista = new ArrayList();
         while(rs.next()){
-
             Medico med = new Medico();
-            
+
             med.setCpf(rs.getString("cpf"));
             med.setRg(rs.getString("rg"));
             med.setNome(rs.getString("nome"));
@@ -304,45 +413,91 @@ public class PersistenciaJDBC implements InterfacePersistencia{
             med.setEndereco(rs.getString("endereco"));
             med.setComplemento(rs.getString("complemento"));
             med.setNumero_crmv(rs.getString("numero_crmv"));
-            
+
+
             Calendar data_cadastro = Calendar.getInstance();
             Calendar data_nascimento = Calendar.getInstance();
-            
+
             data_cadastro.setTimeInMillis(rs.getDate("data_cadastro").getTime());
             med.setData_cadastro(data_cadastro);
-               
+
             data_nascimento.setTimeInMillis(rs.getDate("data_nascimento").getTime());
             med.setData_nascimento(data_nascimento);
-            
+
             lista.add(med);//adiciona na lista o objetivo que contem as informações de um determinada linha do ResultSet.
 
         }
+
         return lista;
-        
+
     }
 
     @Override
-    public Medico doLogin(String nome, String senha) throws Exception {
+    public List<Funcionario> listFuncionarios() throws Exception {
+
+        List<Funcionario> lista = null;
 
 
-        Medico medico = null;
+        PreparedStatement ps = this.con.prepareStatement("SELECT p.cpf, p.rg, p.nome, p.senha, p.numero_celular,"
+                +  " p.email, p.data_cadastro, p.data_nascimento, p.cep, p.endereco, p.complemento, f.numero_ctps, f.numero_pis, f.cargo"
+                +  " FROM tb_pessoa p INNER JOIN tb_funcionario f ON p.cpf = f.cpf;");
 
-        PreparedStatement ps = this.con.prepareStatement("select p.nome, p.senha from tb_pessoa p where p.nome= ? and p.senha = ? ");
+        ResultSet rs = ps.executeQuery();//executa a query
 
-        ps.setString(1, nome);
+        lista = new ArrayList();
+        while(rs.next()){
+            Funcionario func = new Funcionario();
+
+            func.setCpf(rs.getString("cpf"));
+            func.setRg(rs.getString("rg"));
+            func.setNome(rs.getString("nome"));
+            func.setSenha(rs.getString("senha"));
+            func.setNumero_celular(rs.getString("numero_celular"));
+            func.setEmail(rs.getString("email"));
+            func.setCep(rs.getString("cep"));
+            func.setEndereco(rs.getString("endereco"));
+            func.setComplemento(rs.getString("complemento"));
+            func.setNumero_ctps(rs.getString("numero_ctps"));
+            func.setNumero_pis(rs.getString("numero_pis"));
+            func.setCargo(Cargo.valueOf(rs.getString("cargo")));
+
+            Calendar data_cadastro = Calendar.getInstance();
+            Calendar data_nascimento = Calendar.getInstance();
+
+            data_cadastro.setTimeInMillis(rs.getDate("data_cadastro").getTime());
+            func.setData_cadastro(data_cadastro);
+
+            data_nascimento.setTimeInMillis(rs.getDate("data_nascimento").getTime());
+            func.setData_nascimento(data_nascimento);
+
+            lista.add(func);//adiciona na lista o objetivo que contem as informações de um determinada linha do ResultSet.
+
+        }
+
+        return lista;
+
+    }
+
+    @Override
+    public Pessoa doLogin(String cpf, String senha) throws Exception {
+
+
+        Pessoa pessoa = null;
+
+        PreparedStatement ps = this.con.prepareStatement("select p.cpf, p.senha from tb_pessoa p where p.cpf = ? and p.senha = ? ");
+
+        ps.setString(1, cpf);
         ps.setString(2, senha);
 
         ResultSet rs = ps.executeQuery();//o ponteiro do REsultSet inicialmente está na linha -1
 
         if(rs.next()){//se a matriz (ResultSet) tem uma linha
 
-            medico = new Medico();
-            medico.setNome(rs.getString("nome"));
+            pessoa = new Pessoa();
+            pessoa.setCpf(rs.getString("Cpf"));
         }
 
         ps.close();
-        return medico;
+        return pessoa;
 
-    }
-    
-}
+    }}

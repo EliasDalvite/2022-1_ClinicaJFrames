@@ -8,11 +8,8 @@ import javax.persistence.NamedQuery;
 @Entity
 @Table(name="tb_medico")
 @DiscriminatorValue("M")
-@NamedQueries({
-        @NamedQuery(name="Medico.login",
-                query="SELECT p from Pessoa p where p.nome = :paramN and p.senha = :paramS")
-})
-public class Medico extends Pessoa{
+
+public class  Medico extends Pessoa{
     
     @Column(nullable = false)
     private String numero_crmv;

@@ -5,6 +5,7 @@ package br.edu.ifsul.cc.lpoo.cv.test;
 import br.edu.ifsul.cc.lpoo.cv.model.Agenda;
 import br.edu.ifsul.cc.lpoo.cv.model.Funcionario;
 import br.edu.ifsul.cc.lpoo.cv.model.Medico;
+import br.edu.ifsul.cc.lpoo.cv.model.Pessoa;
 import static br.edu.ifsul.cc.lpoo.cv.model.TipoProduto.CONSULTA;
 import br.edu.ifsul.cc.lpoo.cv.model.dao.PersistenciaJDBC;
 import java.text.DateFormat;
@@ -100,41 +101,43 @@ public class TestePersistenciaJDBC {
                     
                     System.out.println("Cpf: "+med.getCpf()+" Rg: "+med.getRg()+" Nome: "+med.getNome()+" Senha: "+med.getSenha()+" Numero_celular: "+med.getNumero_celular()
                     +" Email: "+med.getEmail()+" Data_cadastro: "+med.getData_cadastro()+" Data_nascimento: "+med.getData_nascimento()+" Cep: "+med.getCep()+" Endereco: "+med.getEndereco()
-                    +" Complemento: "+med.getComplemento()+" Numero_crmv: "+med.getNumero_crmv());
+                    +" Complemento: "+med.getComplemento());
                                         
                     persistencia.remover(med);
                 }
 
             }else{
                 
-                System.out.println("Não encontrou o Medico");
+                System.out.println("Não encontrou a Pessoa");
                 
-                Medico med = new Medico();
+                Pessoa pes = new Pessoa();
                 DateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
                 Calendar data_nascimento = Calendar.getInstance();
-                
-                med.setCpf("98765432111");
-                med.setNumero_crmv("123456789");
-                med.setCep("99270000");
-                med.setComplemento("Apartamento");
-                med.setEmail("carlosandre@gmail.com");
-                med.setEndereco("Rua General Osório");
-                med.setNome("Carlos André");
-                med.setNumero_celular("998452131");
-                med.setRg("5446891354");
-                med.setSenha("ca54862");
+
+                pes.setCpf("98765432111");
+                pes.setCep("99270000");
+                pes.setComplemento("Apartamento");
+                pes.setEmail("carlosandre@gmail.com");
+                pes.setEndereco("Rua General Osório");
+                pes.setNome("Carlos André");
+                pes.setNumero_celular("998452131");
+                pes.setRg("5446891354");
+                pes.setSenha("ca54862");
                 data_nascimento.setTime(formato.parse("19/08/1998"));
-                med.setData_nascimento(data_nascimento);
-                
-                persistencia.persist(med);
-                System.out.println("Cadastrou o Medico "+med.getNumero_crmv());
+                pes.setData_nascimento(data_nascimento);
+
+                persistencia.persist(pes);
+                System.out.println("Cadastrou o Medico "+pes.getNome());
             }
-            
+
             persistencia.fecharConexao();
         }else{
             System.out.println("Nao abriu a conexao com o BD via JDBC");
         }
     }
+
+
+
     
     //@Test
     public void remover() throws Exception {
@@ -146,7 +149,7 @@ public class TestePersistenciaJDBC {
             
             if(!lista.isEmpty()){
             
-                for(Medico med : lista){                    
+                for(Medico med : lista){
                     persistencia.remover(med);
                 }   
             }  

@@ -7,7 +7,9 @@ public enum Cargo {
     ADESTRADOR, ATENDENTE, AUXILIAR_VETERINARIO;
     
     public static Cargo getCargo(String nameEnum){
-        
+
+        nameEnum = nameEnum.toUpperCase();
+
         if(nameEnum.equals(Cargo.ADESTRADOR.toString()))
             
             return Cargo.ADESTRADOR;

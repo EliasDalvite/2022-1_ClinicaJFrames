@@ -3,21 +3,16 @@ package br.edu.ifsul.cc.lpoo.cv.model;
 
 import java.io.Serializable;
 import java.util.Calendar;
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorColumn;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 
 
 @Entity
 @Table(name="tb_pessoa")
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "tipo")
+@NamedQueries({
+        @NamedQuery(name="Pessoa.login", query="SELECT p from Pessoa p where p.cpf = :paramN and p.senha = :paramS")
+})
 public class Pessoa implements Serializable{
  
     @Id

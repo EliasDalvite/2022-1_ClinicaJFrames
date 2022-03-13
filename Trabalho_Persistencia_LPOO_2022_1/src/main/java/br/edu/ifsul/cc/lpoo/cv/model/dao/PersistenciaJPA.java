@@ -3,6 +3,8 @@ package br.edu.ifsul.cc.lpoo.cv.model.dao;
 
 import br.edu.ifsul.cc.lpoo.cv.model.Agenda;
 import br.edu.ifsul.cc.lpoo.cv.model.Medico;
+import br.edu.ifsul.cc.lpoo.cv.model.Funcionario;
+import br.edu.ifsul.cc.lpoo.cv.model.Pessoa;
 
 import java.util.List;
 import javax.persistence.EntityManagerFactory;
@@ -58,23 +60,30 @@ public class PersistenciaJPA implements InterfacePersistencia{
     }
     
     @Override
-    public List<Agenda> listAgendas() {
+    public List<Agenda> listAgendas() throws Exception {
 
-        throw new UnsupportedOperationException("Não disponivel");
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
         
     }
     
     @Override
-    public List<Medico> listMedicos() {
+    public List<Medico> listMedicos() throws Exception {
 
-        throw new UnsupportedOperationException("Não disponivel");
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
         
     }
 
     @Override
-    public Medico doLogin(String nome, String senha) throws Exception {
+    public List<Funcionario> listFuncionarios() throws Exception {
 
-        List<Medico> list = entity.createNamedQuery("Medico.logib").setParameter("ParamN", nome).setParameter("ParamS", senha).getResultList();
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+
+    }
+
+    @Override
+    public Pessoa doLogin(String cpf, String senha) throws Exception {
+
+        List<Pessoa> list = entity.createNamedQuery("Pessoa.login").setParameter("paramN", cpf).setParameter("paramS", senha).getResultList();
         if(list.isEmpty()){
             return null;
         }else{
@@ -82,4 +91,5 @@ public class PersistenciaJPA implements InterfacePersistencia{
         }
 
     }
+
 }
