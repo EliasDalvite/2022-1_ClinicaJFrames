@@ -23,8 +23,8 @@ import javax.swing.table.TableRowSorter;
 
 public class JPanelAFuncionarioListagem extends JPanel implements ActionListener{
 
-    private JPanelAFuncionario pnlAFuncionario;
-    private Controle controle;
+    private final JPanelAFuncionario pnlAFuncionario;
+    private final Controle controle;
 
     private BorderLayout borderLayout;
     private JPanel pnlNorte;

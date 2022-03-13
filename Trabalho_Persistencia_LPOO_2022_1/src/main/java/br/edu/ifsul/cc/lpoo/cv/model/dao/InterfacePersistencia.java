@@ -10,22 +10,22 @@ import java.util.List;
 
 public interface InterfacePersistencia {
     
-    public Boolean conexaoAberta();
+    Boolean conexaoAberta();
     
-    public void fecharConexao();
+    void fecharConexao();
     
-    public Object find(Class c, Object id) throws Exception;//select.
+    Object find(Class c, Object id) throws Exception;//select.
     
-    public void persist(Object o) throws Exception;//insert ou update.
+    void persist(Object o) throws Exception;//insert ou update.
     
-    public void remover(Object o) throws Exception;//delete.
+    void remover(Object o) throws Exception;//delete.
     
-    public List<Agenda> listAgendas() throws Exception;
+    List<Agenda> listAgendas() throws Exception;
     
-    public List<Medico> listMedicos() throws Exception;
+    List<Medico> listMedicos() throws Exception;
 
-    public List<Funcionario> listFuncionarios() throws Exception;
+    List<Funcionario> listFuncionarios() throws Exception;
 
-    public Pessoa doLogin(String cpf, String senha) throws Exception;
+    Pessoa doLogin(String cpf, String senha) throws Exception;
 
 }

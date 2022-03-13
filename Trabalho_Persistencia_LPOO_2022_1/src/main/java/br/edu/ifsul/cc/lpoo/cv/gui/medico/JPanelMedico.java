@@ -8,7 +8,7 @@ import javax.swing.JPanel;
 public class JPanelMedico extends JPanel{
 
     private CardLayout cardLayout;
-    private Controle controle;
+    private final Controle controle;
 
     public JPanelMedico(Controle controle){
 

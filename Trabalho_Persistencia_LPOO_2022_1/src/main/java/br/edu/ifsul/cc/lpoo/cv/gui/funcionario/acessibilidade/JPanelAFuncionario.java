@@ -9,7 +9,7 @@ import javax.swing.JPanel;
 public class JPanelAFuncionario extends JPanel {
 
     private CardLayout cardLayout;
-    private Controle controle;
+    private final Controle controle;
 
     private JPanelAFuncionarioFormulario formulario;
     private JPanelAFuncionarioListagem listagem;

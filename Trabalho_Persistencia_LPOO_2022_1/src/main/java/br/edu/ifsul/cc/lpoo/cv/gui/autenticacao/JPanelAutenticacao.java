@@ -19,7 +19,7 @@ import javax.swing.border.LineBorder;
 
 public class JPanelAutenticacao extends JPanel implements ActionListener {
 
-    private Controle controle;
+    private final Controle controle;
     private GridBagLayout gridLayout;
     private GridBagConstraints posicionador;
 

@@ -20,7 +20,7 @@ public class JMenuBarHome extends JMenuBar implements ActionListener {
     private JMenuItem menuItemMedico;
     private JMenuItem menuItemFuncionario;
 
-    private Controle controle;
+    private final Controle controle;
 
     public JMenuBarHome(Controle controle){
 

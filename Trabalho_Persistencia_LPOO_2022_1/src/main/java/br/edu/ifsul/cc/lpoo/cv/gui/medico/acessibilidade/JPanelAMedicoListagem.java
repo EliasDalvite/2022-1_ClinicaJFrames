@@ -22,8 +22,8 @@ import javax.swing.table.TableRowSorter;
 
 public class JPanelAMedicoListagem extends JPanel implements ActionListener{
 
-    private JPanelAMedico pnlAMedico;
-    private Controle controle;
+    private final JPanelAMedico pnlAMedico;
+    private final Controle controle;
 
     private BorderLayout borderLayout;
     private JPanel pnlNorte;

@@ -31,8 +31,8 @@ import javax.swing.JOptionPane;
 public class JPanelAFuncionarioFormulario extends JPanel implements ActionListener{
 
 
-    private JPanelAFuncionario pnlAFuncionario;
-    private Controle controle;
+    private final JPanelAFuncionario pnlAFuncionario;
+    private final Controle controle;
 
     private BorderLayout borderLayout;
     private JTabbedPane tbpAbas;

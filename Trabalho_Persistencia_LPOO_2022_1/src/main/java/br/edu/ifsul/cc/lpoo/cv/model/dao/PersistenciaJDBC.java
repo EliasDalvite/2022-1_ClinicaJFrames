@@ -22,7 +22,7 @@ public class PersistenciaJDBC implements InterfacePersistencia{
         Class.forName(DRIVER); //carregamento do driver postgresql em tempo de execução
         System.out.println("Tentando estabelecer conexao JDBC com : "+URL+" ...");
 
-        this.con = (Connection) DriverManager.getConnection(URL, USER, SENHA);
+        this.con = DriverManager.getConnection(URL, USER, SENHA);
     
     }
 

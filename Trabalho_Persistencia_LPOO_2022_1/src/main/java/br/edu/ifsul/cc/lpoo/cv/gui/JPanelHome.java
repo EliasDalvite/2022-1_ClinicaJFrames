@@ -19,7 +19,7 @@ public class JPanelHome extends JPanel  {
     private JLabel lblData;
     private BorderLayout layoutGeo;
 
-    private Controle controle;
+    private final Controle controle;
 
     public JPanelHome(Controle controle){
 
